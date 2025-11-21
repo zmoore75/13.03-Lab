@@ -1,0 +1,2 @@
+CREATE USER for root@localhost
+CREATE USER `root`@`localhost` IDENTIFIED VIA mysql_native_password USING 'invalid' OR unix_socket

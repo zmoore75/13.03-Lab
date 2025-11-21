@@ -3,21 +3,40 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
   ol
-  each val in todos
-    li
-      span= val.task + ' - '
-      if val.completed > 0
-        span Completed
-      else
-        pan Not Completed
-      form(method='POST' action='/delete')
-        input(type='hidden', name='id', value=val.id)
-        button(type='submit') Delete
+    each val in todos
+      li
+        // Completion toggle button
+        form(method="POST", action="/toggle", style="display:inline;")
+          input(type="hidden", name="id", value=val.id)
+          button(type="submit")
+            if val.completed
+              | ✔ Completed
+            else
+              | Mark Completed
+
+        // Task text (strike-through if completed)
+        if val.completed
+          span(style="text-decoration: line-through; margin-left:10px;") #{val.task}
+        else
+          span(style="margin-left:10px;") #{val.task}
+
+        // Delete button
+        form(method="POST", action="/delete", style="display:inline; margin-left:10px;")
+          input(type="hidden", name="id", value=val.id)
+          button(type="submit") Delete
+
+        // Edit form below each task
+        form(method="POST", action="/edit" style="margin-top:5px;")
+          input(type="hidden", name="id", value=val.id)
+          input(type="text", name="task", value=val.task, required)
+          button(type="submit") Save Changes
 
   hr
+
   h2 Add a new task
-  form(method='POST' action='/create')
-    label(for='task') Task:
-    input(type='text', name='task', id='task', required)
-    button(type='submit') Create Task
+  form(method="POST", action="/create")
+    label(for="task") Task:
+    input(type="text", name="task", id="task", required)
+    button(type="submit") Create Task
